@@ -49,7 +49,7 @@ class IndexController extends ApiController {
 
 
             if ($otype == 2) {
-                $reslist['kh_money'] = 380;
+                $total_fee = 380 * $reslist['xf_yeah'] * 100;
                 $reslist['body'] = "用户" . $reslist['users']['name'] . "续费";
             }
 //        print_r($reslist);
@@ -144,7 +144,7 @@ class IndexController extends ApiController {
                     $input->SetAttach("佳居信息科技" . $reslist['order_id']);
                     $input->SetDetail(json_encode($reslist['body']));
                     $input->SetOut_trade_no($reslist['order_id']);
-                    $input->SetTotal_fee($reslist['kh_money'] * 100); //$res['price'] * 100
+                    $input->SetTotal_fee($total_fee); //$res['price'] * 100
                     $input->SetTime_start(date("YmdHis"));
                     $input->SetTime_expire(date("YmdHis", time() + 600));
                     $input->SetGoods_tag("0");
