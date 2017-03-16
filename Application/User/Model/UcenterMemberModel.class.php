@@ -49,7 +49,7 @@ class UcenterMemberModel extends Model
         array('email', '', -8, self::EXISTS_VALIDATE, 'unique'), //邮箱被占用
 
         /* 验证手机号码 */
-        array('mobile', '/^(1[3|4|5|8])[0-9]{9}$/', -9, self::EXISTS_VALIDATE), //手机格式不正确 TODO:
+        array('mobile', '/^(1[3|4|5|7|8])[0-9]{9}$/', -9, self::EXISTS_VALIDATE), //手机格式不正确 TODO:
         array('mobile', 'checkDenyMobile', -10, self::EXISTS_VALIDATE, 'callback'), //手机禁止注册
         array('mobile', '', -11, self::EXISTS_VALIDATE, 'unique'), //手机号被占用
     );

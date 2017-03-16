@@ -1315,7 +1315,7 @@ class UserController extends ApiController {
             $where = array('e_id'=>$id); //非数字，则查e_id
         }        
         
-        $check = M('Equipment')->where($where)->getField('id,uid,e_pwd');
+        $check = M('Equipment')->where($where)->find();
         if(!$check){
             $info = array();
             $info['msg'] = '设备不存在';

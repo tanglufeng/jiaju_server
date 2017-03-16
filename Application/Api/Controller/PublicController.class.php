@@ -108,19 +108,20 @@ class PublicController extends ApiController {
     }
 
      public function register($name, $password,$email=null,$mobile,$Fcode=NULL) {
-         ##如果有推广码$Fcode,则进行搜索比对，看该推广码是否正确
-        if(!empty($Fcode)){
+        ##如果有推广码$Fcode,则进行搜索比对，看该推广码是否正确
+     	$check = false;
+     	if(!empty($Fcode)){
             $check = M('UcenterMember')->where(array('code'=>$Fcode))->find();
             if(empty($check)){
-                $info = array();
+                /* $info = array();
                 $info['status'] = 0;
                 $info['msg'] = '没有该推荐码'; 
-                $this->apiError(FALSE,NULL,$info);
+                $this->apiError(FALSE,NULL,$info); */
             }
          }
         //调用用户中心
         $api = new UserApi();
-        $nickname = $name;
+        $nickname = $name . '_' . $mobile;
         $username = $mobile;
         $uid = $api->register($username, $nickname, $password, $email,$mobile); // 邮箱为空
         if($uid <= 0) {
@@ -137,11 +138,13 @@ class PublicController extends ApiController {
             $data['score1'] = $score + $score_original;
             $add_code = M('UcenterMember')->where(array('id'=>$uid))->save($add);//存储自己和推广人的推广码
             $add_score = M('Member')->where(array('uid'=>$uid))->save($data);//为当前注册用户增加积分
-            ##给推广人增加积分
-            $take_from_score = get_table_field('INVITE_REGISTER_SCORE','tag','value','ScoreRule');//获取积分规则的值(被推荐人积分规则)
-            $from_score = get_table_field($Fcode,'code','score1','Member');
-            $from['score1'] = $from_score + $take_from_score;
-            $add_from_score = M('Member')->where(array('code'=>$Fcode))->save($from);//为此邀请码用户增加积分
+            if(!empty($Fcode) && $check){
+	            ##给推广人增加积分
+	            $take_from_score = get_table_field('INVITE_REGISTER_SCORE','tag','value','ScoreRule');//获取积分规则的值(被推荐人积分规则)
+	            $from_score = get_table_field($Fcode,'code','score1','Member');
+	            $from['score1'] = $from_score + $take_from_score;
+	            $add_from_score = M('Member')->where(array('code'=>$Fcode))->save($from);//为此邀请码用户增加积分
+            }
             //返回成功信息
             $extra = array();
             $extra['uid'] = $uid;
@@ -149,6 +152,7 @@ class PublicController extends ApiController {
            
         }
     }
+	
     public function sendSms($mobile=null) {
         //如果没有填写手机号码，则默认使用已经绑定的手机号码
         if($mobile==='')
