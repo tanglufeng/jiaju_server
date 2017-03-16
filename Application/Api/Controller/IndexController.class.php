@@ -49,7 +49,7 @@ class IndexController extends ApiController {
 
 
             if ($otype == 2) {
-                $total_fee = 380 * $reslist['xf_yeah'] * 100;
+                $total_fee = 365 * $reslist['xf_yeah'] * 100;
                 $reslist['body'] = "用户" . $reslist['users']['name'] . "续费";
             }
 //        print_r($reslist);
